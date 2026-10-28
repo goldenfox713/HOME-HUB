@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#f6f1e8">
+<title>Home Hub</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#f6f1e8;color:#2e2925;font-family:Arial,Helvetica,sans-serif}
+body{min-height:100vh}
+header{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 16px 8px;gap:12px
+}
+h1{margin:0;font-size:30px}
+#today{font-size:15px;color:#6e665f;font-weight:700;text-align:right}
+main{padding:8px 12px 14px}
+.dashboard{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.quad{
+  background:#fffdf8;
+  border:2px solid #d9d0c4;
+  border-radius:20px;
+  padding:14px;
+  min-width:0;
+}
+.quad h2{margin:0 0 10px;font-size:24px}
+.sub{font-size:13px;color:#786f66;margin:-5px 0 9px}
+.section-title{font-size:16px;font-weight:700;margin:10px 0 5px;color:#554c45}
+.row{display:flex;gap:8px;align-items:center;margin-top:8px}
+input,button{font:inherit}
+input{
+  width:100%;
+  min-width:0;
+  min-height:48px;
+  border:1.5px solid #bbb0a3;
+  border-radius:12px;
+  background:white;
+  padding:10px 11px;
+  font-size:17px;
+  color:#2e2925;
+}
+button{
+  border:0;border-radius:12px;min-height:48px;padding:9px 13px;
+  font-size:16px;font-weight:700;background:#69594b;color:#fff;
+}
+button.light{background:#e9e2d8;color:#3e3731}
+button.secondary{background:#9d8b7c}
+button.danger{background:#855654}
+.item{
+  display:flex;justify-content:space-between;align-items:center;gap:8px;
+  background:#fff;border:1px solid #dfd7cc;border-radius:11px;
+  padding:9px 10px;margin:7px 0;
+}
+.item span{font-size:17px;line-height:1.2}
+.item button{font-size:13px;min-height:36px;padding:5px 8px}
+.check{
+  display:flex;align-items:center;gap:9px;padding:7px 0;
+  border-bottom:1px solid #e8e0d7;
+}
+.check input[type=checkbox]{width:25px;height:25px;min-height:0;flex:0 0 auto}
+.check span{font-size:17px;flex:1}
+.done{text-decoration:line-through;color:#8f867d}
+.dog-row{
+  display:grid;grid-template-columns:90px 1fr;gap:8px;align-items:center;
+  margin:8px 0;
+}
+.dog-name{font-size:18px;font-weight:700}
+.dog-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.dog-actions button{font-size:14px;min-height:42px;padding:6px 8px}
+.dog-status{
+  grid-column:2;
+  background:#f3eee6;
+  border-radius:10px;
+  padding:8px 10px;
+  font-size:14px;
+  line-height:1.35;
+}
+.event{
+  background:#fff;border:1px solid #dfd7cc;border-radius:11px;
+  padding:9px 10px;margin:7px 0;
+}
+.event-date{font-size:13px;font-weight:700;color:#736a61}
+.event-text{font-size:17px;margin-top:2px}
+.calendar-mini{
+  display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:8px 0 10px;
+}
+.calendar-mini div{
+  min-height:34px;border-radius:8px;background:#f1ece4;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;
+}
+.calendar-mini .head{font-weight:700;background:transparent;min-height:22px}
+.calendar-mini .today{background:#69594b;color:#fff;font-weight:700}
+.empty{font-size:14px;color:#7c736a;padding:6px 0}
+footer{text-align:center;color:#7a7169;font-size:12px;padding:2px 0 10px}
+@media(max-width:760px){
+  .dashboard{grid-template-columns:1fr}
+  h1{font-size:26px}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Home Hub</h1>
+  <div id="today"></div>
+</header>
+
+<main>
+  <div class="dashboard">
+
+    <section class="quad" id="jordyQuad">
+      <h2>Jordy</h2>
+      <div class="sub">Ready-to-eat foods and quick meal ideas</div>
+
+      <div class="section-title">Ready in the fridge</div>
+      <div id="jordyFoods"></div>
+      <div class="row">
+        <input id="jordyFoodInput" placeholder="Chicken + rice — 2 servings">
+        <button id="addJordyFood">Add</button>
+      </div>
+
+      <div class="section-title">Easy meal ideas</div>
+      <div id="jordyIdeas"></div>
+      <div class="row">
+        <input id="jordyIdeaInput" placeholder="Eggs + fruit, quesadilla…">
+        <button id="addJordyIdea">Add</button>
+      </div>
+    </section>
+
+    <section class="quad" id="dogsQuad">
+      <h2>Dogs</h2>
+      <div class="sub">Meals and last potty time</div>
+
+      <div class="dog-row" data-dog="Bellator">
+        <div class="dog-name">Bellator</div>
+        <div class="dog-actions">
+          <button class="light" data-action="breakfast">Breakfast</button>
+          <button class="light" data-action="dinner">Dinner</button>
+          <button data-action="out">Went Out</button>
+          <button class="secondary" data-action="reset">Reset</button>
+        </div>
+        <div class="dog-status" id="status-Bellator"></div>
+      </div>
+
+      <div class="dog-row" data-dog="Petra">
+        <div class="dog-name">Petra</div>
+        <div class="dog-actions">
+          <button class="light" data-action="breakfast">Breakfast</button>
+          <button class="light" data-action="dinner">Dinner</button>
+          <button data-action="out">Went Out</button>
+          <button class="secondary" data-action="reset">Reset</button>
+        </div>
+        <div class="dog-status" id="status-Petra"></div>
+      </div>
+    </section>
+
+    <section class="quad" id="foodQuad">
+      <h2>Kitchen</h2>
+      <div class="sub">Groceries, veggies, sides, and things we already have</div>
+
+      <div class="section-title">Veggies & sides</div>
+      <div id="veggies"></div>
+      <div class="row">
+        <input id="veggieInput" placeholder="Broccoli, salad, potatoes…">
+        <button id="addVeggie">Add</button>
+      </div>
+
+      <div class="section-title">Grocery list</div>
+      <div id="groceries"></div>
+      <div class="row">
+        <input id="groceryInput" placeholder="Milk, GF bread, fruit…">
+        <button id="addGrocery">Add</button>
+      </div>
+    </section>
+
+    <section class="quad" id="calendarQuad">
+      <h2>Calendar</h2>
+      <div class="sub">What’s coming up</div>
+      <div id="miniCalendar" class="calendar-mini"></div>
+      <div id="events"></div>
+      <div class="row">
+        <input id="eventDate" type="date">
+      </div>
+      <div class="row">
+        <input id="eventText" placeholder="Appointment, school event…">
+        <button id="addEvent">Add</button>
+      </div>
+    </section>
+
+  </div>
+</main>
+<footer>Saved on this tablet.</footer>
+
+<script>
+(function(){
+  function load(k,f){try{var v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}}
+  function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function nowTime(){return new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}
+
+  var today = new Date();
+  document.getElementById('today').textContent=today.toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'});
+
+  var jordyFoods=load('q_jordy_foods',[]);
+  var jordyIdeas=load('q_jordy_ideas',[]);
+  var veggies=load('q_veggies',[]);
+  var groceries=load('q_groceries',[]);
+  var events=load('q_events',[]);
+  var dogs=load('q_dogs',{
+    Bellator:{breakfast:false,breakfastTime:'',dinner:false,dinnerTime:'',lastOut:''},
+    Petra:{breakfast:false,breakfastTime:'',dinner:false,dinnerTime:'',lastOut:''}
+  });
+
+  function renderList(id,arr,key,buttonText){
+    var el=document.getElementById(id);el.innerHTML='';
+    if(!arr.length){el.innerHTML='<div class="empty">Nothing listed yet.</div>';return}
+    arr.forEach(function(v,i){
+      var row=document.createElement('div');row.className='item';
+      row.innerHTML='<span>'+esc(v)+'</span><button class="danger">'+buttonText+'</button>';
+      row.querySelector('button').onclick=function(){arr.splice(i,1);save(key,arr);renderList(id,arr,key,buttonText)};
+      el.appendChild(row);
+    })
+  }
+
+  function renderGroceries(){
+    var el=document.getElementById('groceries');el.innerHTML='';
+    if(!groceries.length){el.innerHTML='<div class="empty">Nothing on the list.</div>';return}
+    groceries.forEach(function(it,i){
+      var row=document.createElement('div');row.className='check';
+      var cb=document.createElement('input');cb.type='checkbox';cb.checked=!!it.done;
+      var sp=document.createElement('span');sp.textContent=it.text;if(it.done)sp.className='done';
+      cb.onchange=function(){it.done=cb.checked;save('q_groceries',groceries);renderGroceries()};
+      row.appendChild(cb);row.appendChild(sp);
+      el.appendChild(row);
+    })
+  }
+
+  function renderDogs(){
+    ['Bellator','Petra'].forEach(function(name){
+      var s=dogs[name];
+      document.getElementById('status-'+name).innerHTML=
+        'Breakfast: <b>'+(s.breakfast?'✓ '+s.breakfastTime:'Not yet')+'</b><br>'+
+        'Dinner: <b>'+(s.dinner?'✓ '+s.dinnerTime:'Not yet')+'</b><br>'+
+        'Last out: <b>'+(s.lastOut||'No time recorded')+'</b>';
+      var card=document.querySelector('[data-dog="'+name+'"]');
+      ['breakfast','dinner'].forEach(function(a){
+        var btn=card.querySelector('[data-action="'+a+'"]');
+        btn.textContent=(s[a]?'✓ ':'')+a.charAt(0).toUpperCase()+a.slice(1);
+        btn.className=s[a]?'secondary':'light';
+      });
+    })
+  }
+
+  document.querySelectorAll('.dog-row button').forEach(function(btn){
+    btn.onclick=function(){
+      var row=btn.closest('.dog-row'),name=row.dataset.dog,action=btn.dataset.action,s=dogs[name];
+      if(action==='out'){s.lastOut=nowTime()}
+      else if(action==='reset'){
+        s.breakfast=false;s.breakfastTime='';s.dinner=false;s.dinnerTime='';
+      }else{
+        s[action]=!s[action];
+        s[action+'Time']=s[action]?nowTime():'';
+      }
+      save('q_dogs',dogs);renderDogs();
+    }
+  });
+
+  function addSimple(inputId,arr,key,renderId,buttonText){
+    var i=document.getElementById(inputId),v=i.value.trim();
+    if(v){arr.push(v);save(key,arr);i.value='';renderList(renderId,arr,key,buttonText)}
+  }
+
+  document.getElementById('addJordyFood').onclick=function(){addSimple('jordyFoodInput',jordyFoods,'q_jordy_foods','jordyFoods','Gone')};
+  document.getElementById('addJordyIdea').onclick=function(){addSimple('jordyIdeaInput',jordyIdeas,'q_jordy_ideas','jordyIdeas','Remove')};
+  document.getElementById('addVeggie').onclick=function(){addSimple('veggieInput',veggies,'q_veggies','veggies','Used')};
+
+  document.getElementById('addGrocery').onclick=function(){
+    var i=document.getElementById('groceryInput'),v=i.value.trim();
+    if(v){groceries.push({text:v,done:false});save('q_groceries',groceries);i.value='';renderGroceries()}
+  };
+
+  function renderCalendar(){
+    var el=document.getElementById('miniCalendar');el.innerHTML='';
+    ['S','M','T','W','T','F','S'].forEach(function(d){
+      var x=document.createElement('div');x.className='head';x.textContent=d;el.appendChild(x);
+    });
+    var year=today.getFullYear(),month=today.getMonth();
+    var first=new Date(year,month,1).getDay();
+    var daysInMonth=new Date(year,month+1,0).getDate();
+    for(var i=0;i<first;i++){var blank=document.createElement('div');blank.textContent='';el.appendChild(blank)}
+    for(var d=1;d<=daysInMonth;d++){
+      var x=document.createElement('div');x.textContent=d;
+      if(d===today.getDate())x.className='today';
+      el.appendChild(x);
+    }
+  }
+
+  function renderEvents(){
+    var el=document.getElementById('events');el.innerHTML='';
+    if(!events.length){el.innerHTML='<div class="empty">No events yet.</div>';return}
+    events.sort(function(a,b){return a.date.localeCompare(b.date)});
+    events.slice(0,6).forEach(function(ev){
+      var row=document.createElement('div');row.className='event';
+      row.innerHTML='<div class="event-date">'+esc(ev.date)+'</div><div class="event-text">'+esc(ev.text)+'</div>';
+      el.appendChild(row);
+    })
+  }
+
+  document.getElementById('addEvent').onclick=function(){
+    var d=document.getElementById('eventDate').value;
+    var t=document.getElementById('eventText').value.trim();
+    if(d&&t){
+      events.push({date:d,text:t});save('q_events',events);
+      document.getElementById('eventDate').value='';
+      document.getElementById('eventText').value='';
+      renderEvents();
+    }
+  };
+
+  renderList('jordyFoods',jordyFoods,'q_jordy_foods','Gone');
+  renderList('jordyIdeas',jordyIdeas,'q_jordy_ideas','Remove');
+  renderList('veggies',veggies,'q_veggies','Used');
+  renderGroceries();
+  renderDogs();
+  renderCalendar();
+  renderEvents();
+})();
+</script>
+</body>
+</html>
